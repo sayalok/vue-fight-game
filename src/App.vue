@@ -8,7 +8,10 @@
 			@specialAttack="specialAttack"
 			@heal="heal"
 			@giveUp="giveUp"/>
-		<Message/>
+		<Message
+			v-if="turns.length > 0"
+			:logs="turns"
+		/>
 	</div>
 </template>
 
@@ -23,7 +26,8 @@
 			return {
 				playerHealth: 100,
 				monsterHealth: 100,
-				gameIsRunning: false
+				gameIsRunning: false,
+				turns: []
 			}
 		},
 		methods: {
@@ -34,11 +38,11 @@
             },
 			attack: function () {
 				this.monsterAttacks(3,10);
-				this.playerAttacks()
+				this.playerAttacks(5,12)
 			},
 			specialAttack: function () {
 				this.monsterAttacks(10,20)
-				this.playerAttacks()
+				this.playerAttacks(5,12)
 			},
 			heal: function () {
 				if (this.playerHealth <= 90)
@@ -47,14 +51,27 @@
 					this.playerHealth = 100
 			},
 			giveUp: function () {
-                this.gameIsRunning = false;
+				this.gameIsRunning = false;
+				this.playerHealth = 100;
+				this.monsterHealth = 100;
+				this.turns = []
 			},
 			monsterAttacks: function (min,max) {
-				this.monsterHealth -= this.caculateDamage(min,max)
+				let damage = this.caculateDamage(min,max);
+				this.monsterHealth -= damage
+				this.turns.unshift({
+					isPlayer: true,
+					text: 'Player hit monster for ' + damage
+				})
 				if (this.checkWin()) return
 			},
-			playerAttacks: function () {
-				this.playerHealth -= this.caculateDamage(5,12)
+			playerAttacks: function (min,max) {
+				let damage = this.caculateDamage(min,max);
+				this.playerHealth -= damage
+				this.turns.unshift({
+					isPlayer: false,
+					text: 'Monster hit player for ' + damage
+				})
 				this.checkWin();	
 			},
 			caculateDamage: function (min,max) {
