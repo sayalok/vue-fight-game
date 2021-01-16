@@ -4,7 +4,10 @@
 		<Control 
 			:gameStatus="gameIsRunning" 
 			@gameStatusChange="startGame"
-			@attack="attack"/>
+			@attack="attack"
+			@specialAttack="specialAttack"
+			@heal="heal"
+			@giveUp="giveUp"/>
 		<Message/>
 	</div>
 </template>
@@ -15,6 +18,7 @@
 	import Message from './components/Message/Message'
 	export default {
 		name: 'App',
+		components: {Health,Control,Message},
 		data() {
 			return {
 				playerHealth: 100,
@@ -29,24 +33,29 @@
                 this.monsterHealth = 100;
             },
 			attack: function () {
-				var damage = this.caculateDamage(3,10)
-				this.monsterHealth -= damage
-
-				if (this.checkWin()) return
-
-				damage = this.caculateDamage(5,12)
-				this.playerHealth -= damage
-				
-				this.checkWin();
+				this.monsterAttacks(3,10);
+				this.playerAttacks()
 			},
 			specialAttack: function () {
-				
+				this.monsterAttacks(10,20)
+				this.playerAttacks()
 			},
 			heal: function () {
-				
+				if (this.playerHealth <= 90)
+					this.playerHealth += 10
+				else
+					this.playerHealth = 100
 			},
 			giveUp: function () {
-				
+                this.gameIsRunning = false;
+			},
+			monsterAttacks: function (min,max) {
+				this.monsterHealth -= this.caculateDamage(min,max)
+				if (this.checkWin()) return
+			},
+			playerAttacks: function () {
+				this.playerHealth -= this.caculateDamage(5,12)
+				this.checkWin();	
 			},
 			caculateDamage: function (min,max) {
 				return Math.max(Math.floor(Math.random() * max) + 1, min)	
@@ -62,7 +71,6 @@
 				return false
 			}
 		},
-		components: {Health,Control,Message}
 	}
 </script>
 

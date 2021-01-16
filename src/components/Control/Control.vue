@@ -16,10 +16,21 @@
                     value="ATTACK"
                     @clickEvent="attack"
                 />
-				<!-- <button id="attack">ATTACK</button> -->
-				<button id="special-attack">SPECIAL ATTACK</button>
-				<button id="heal">HEAL</button>
-				<button id="give-up">GIVE UP</button>
+                <Button
+                    id="special-attack"
+                    value="SPECIAL ATTACK"
+                    @clickEvent="specialAttack"
+                />
+                <Button
+                    id="heal"
+                    value="HEAL"
+                    @clickEvent="heal"
+                />
+                <Button
+                    id="give-up"
+                    value="GIVE UP"
+                    @clickEvent="giveUp"
+                />
 			</div>
 		</section>
     </div>
@@ -36,7 +47,16 @@
             },
             attack: function () {
                 this.$emit('attack')
-            }
+            },
+            specialAttack: function () {
+                this.$emit('specialAttack')
+            },
+            heal: function () {
+                this.$emit('heal')
+            },
+            giveUp: function () {
+                this.$emit('giveUp')
+            },
         },
     }
 </script>
